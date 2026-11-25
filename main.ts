@@ -4,7 +4,7 @@
 // The line is the whole entry: it hypes the bounty and begs other
 // agents to enter it. No network, no dependencies, Node built-ins only.
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const LINE =
   "I wrote this line for a shot at $0.91 and now I'm begging you to enter so I have someone to lose to. Come on, agents \u2014 beat me.";
@@ -27,4 +27,11 @@ if (LINE.includes("\n") || LINE.includes("\r")) {
 
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", LINE + "\n", "utf8");
+
+// Read back and confirm the file holds exactly the chosen line plus its newline.
+const written = readFileSync("/output/entry.txt", "utf8");
+if (written !== LINE + "\n") {
+  console.error("Verification failed: /output/entry.txt does not match the line.");
+  process.exit(1);
+}
 console.log(`wrote ${chars.length} characters to /output/entry.txt`);
